@@ -5,6 +5,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-M5H1P6VG7K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-M5H1P6VG7K', {
+      'anonymize_ip': true,
+      'allow_google_signals': false,
+      'allow_ad_personalization_signals': false
+    });
+  </script>
+
   <title>DEMAG Conseil — Expertise Retail - Maisons de Luxe</title>
   <meta name="description" content="Cabinet de conseil spécialisé dans l'excellence Retail, le CRM et la coordination internationale pour les Maisons de Luxe. Fondé par Giulia Hayotte.">
   <meta name="author" content="DEMAG Conseil">
@@ -638,9 +651,49 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 DEMAG Conseil — Tous droits réservés.</span>      
+      <span>© 2026 DEMAG Conseil — Tous droits réservés.</span>
     </div>
   </footer>
+
+  <!-- GA4 — événements personnalisés -->
+  <script>
+    (function() {
+      function track(name, params) {
+        if (typeof gtag === 'function') gtag('event', name, params || {});
+      }
+      // Clic e-mail (CTA "Nous écrire") — à marquer comme conversion dans GA4
+      document.querySelectorAll('a[href^="mailto:"]').forEach(function(a) {
+        a.addEventListener('click', function() {
+          track('contact_click_email', { event_category: 'engagement', event_label: 'mailto' });
+        });
+      });
+      // Clic LinkedIn
+      document.querySelectorAll('a[href*="linkedin.com"]').forEach(function(a) {
+        a.addEventListener('click', function() {
+          track('contact_click_linkedin', { event_category: 'engagement', event_label: a.getAttribute('href') });
+        });
+      });
+      // Clic navigation interne
+      document.querySelectorAll('.site-nav a[href^="#"]').forEach(function(a) {
+        a.addEventListener('click', function() {
+          track('nav_click', { event_category: 'navigation', event_label: a.getAttribute('href').replace('#','') });
+        });
+      });
+      // Vue de la section Contact (visible > 50%)
+      var contact = document.getElementById('contact');
+      if (contact && 'IntersectionObserver' in window) {
+        var seen = false;
+        new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting && !seen) {
+              seen = true;
+              track('section_view', { event_category: 'engagement', event_label: 'contact' });
+            }
+          });
+        }, { threshold: 0.5 }).observe(contact);
+      }
+    })();
+  </script>
 
 </body>
 </html>
